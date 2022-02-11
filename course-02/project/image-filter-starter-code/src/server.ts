@@ -37,9 +37,11 @@ import { filterImageFromURL, deleteLocalFiles } from './util/util';
   });
   app.get('/filteredimage', async (req, res) => {
     if (req.query.image_url.length > 2) {
-      // const image_url = req.query.image_url;
-      // const modifiedImage = filterImageFromURL(image_url);
-      // res.sendFile(await modifiedImage);
+      const image_url = req.query.image_url;
+      const modifiedImage = await filterImageFromURL(image_url);
+      res.status(200).sendFile(modifiedImage, () => {
+        deleteLocalFiles([modifiedImage]);
+      });
     } else {
       return res.status(400).send({ message: 'Img url is required' });
     }
